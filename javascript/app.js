@@ -39,12 +39,14 @@ function bootstrapSpotifySearch(){
         // Which contains the first 20 matching elements.
         // In our case they are artists.
         artists.items.forEach(function(artist){
-          var artistLi = $("<li>" + artist.name + " - " + artist.id + "</li>")
+          var artistLi = $("<li class = 'listNames'>" + artist.name + " - " + artist.id + "</li>")
           artistLi.attr('data-spotify-id', artist.id);
           outputArea.append(artistLi);
 
           artistLi.click(displayAlbumsAndTracks);
-        })
+
+        });
+
       });
 
       // Attach the callback for failure 
@@ -58,7 +60,46 @@ function bootstrapSpotifySearch(){
 
 /* COMPLETE THIS FUNCTION! */
 function displayAlbumsAndTracks(event) {
-  var appendToMe = $('#albums-and-tracks');
+     var albumDiv = $('#albums-and-tracks');
+     albumDiv.empty();
+
+     $.ajax({
+       type: "GET",
+       dataType: 'json',
+       url: "https://api.spotify.com/v1/artists/"+ $(event.target).attr('data-spotify-id') + "/albums",
+     })
+     .done(function(data) {
+      console.log(data);
+       var albums = data.items;
+       albums.forEach(function(album){
+         console.log(album.name);
+
+
+         var albumLi = $("<ul class='albumList'><h3>" + album.name +"</h3></ul>");
+         //albumLi.attr('data-spotify-id', album.id);
+         albumDiv.append(albumLi);
+
+         $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: "https://api.spotify.com/v1/albums/" + album.id + "/tracks",
+          })
+          .done(function(data) {
+            console.log(data.items);
+            var tracks = data.items;
+
+            tracks.forEach(function(track){
+              console.log(track.name);
+
+              var oneTrack = $("<li class='trackName'>" + track.name +"</li>");
+              albumLi.append(oneTrack);
+            });
+          });
+       });   
+     });
+
+  
+
 
   // These two lines can be deleted. They're mostly for show. 
   console.log("you clicked on:");

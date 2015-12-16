@@ -57,3 +57,5 @@ You'll need to use these two endpoints, but you may also need to use more:
 [https://developer.spotify.com/web-api/console/get-album/](https://developer.spotify.com/web-api/console/get-album/)
 [https://developer.spotify.com/web-api/console/get-artist-albums/](https://developer.spotify.com/web-api/console/get-artist-albums/)
 
+	https://api.spotify.com/v1/artists/{id}/albums
+
